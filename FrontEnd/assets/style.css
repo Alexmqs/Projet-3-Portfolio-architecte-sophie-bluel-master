@@ -52,6 +52,8 @@ body {
 	margin:auto;
 	font-family: 'Work Sans' ;
 	font-size: 14px;
+	background-color: #FFFEF8;
+	;
 }
 header {
 	display: flex;
@@ -98,6 +100,54 @@ nav li {
 li:hover {
 	color: #B1663C;
 }
+
+
+/* Ajout du style pour la page login */
+
+.login-page {
+	margin-top: 125px;
+	margin-bottom: 500px;
+	margin-left: auto; 
+	margin-right: auto;
+	display: block; 
+	max-width: 379px;
+}
+
+.login-page h2{
+	margin-bottom: 20px;
+	text-align: center;
+	margin-bottom: 50px;
+}
+
+.login-page input[type="email"],
+.login-page input[type="password"] {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+  margin-top: 5px;
+  border: none;
+  box-shadow: 0px 4px 14px 0px #00000017;
+
+}
+
+.login-page input[type="submit"] {
+    padding: 8px;
+    cursor: pointer;
+    margin-left: auto; 
+    margin-right: auto;
+    display: block; 
+}
+
+.login-page p {
+	text-align: center;
+}
+
+.login-page a {
+	color: black;
+}
+
+
 #introduction {
 	display: flex;
 	align-items: center;
@@ -126,6 +176,8 @@ li:hover {
 	margin-bottom: 1em;
 }
 
+
+/* Ajout du style pour les filtre */
 #filterButtons {
 	text-align: center;
 	margin-bottom: 40px;

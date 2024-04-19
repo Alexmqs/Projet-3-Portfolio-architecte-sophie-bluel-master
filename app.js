@@ -75,5 +75,45 @@ filterButtons.forEach(button => {
 });
 
 
+
+
 //Génere les images de la page
 showPictures("all") 
+
+
+// Partie pour générer la page de login 
+
+function loginPage() {
+    //Supprimer le contenue du main 
+    let main = document.querySelector("main"); 
+    main.innerHTML = ""; 
+    //document.querySelector("main").innerHTML = "";
+
+    let html =`
+        <div class ="login-page">
+            <h2>Log In</h2>
+            <form id="loginForm" action="login" method="post">
+                <label for="email">Email</label><br>
+                <input type="email" id="email" name="email" required><br>
+                <label for="password">Mot de passe</label><br>
+                <input type="password" id="password" name="password" required><br>
+                <input type="submit" id = "submit" value="Se connecter">
+            </form>
+            <p><a href="/password-reset">Mot de passe oublié ?</a></p>
+        </div>
+    `;
+
+    main.innerHTML = html;
+
+
+}
+
+let loginBtn = document.getElementById("login")
+loginBtn.addEventListener("click",function() {
+//Charger la login page
+    loginPage()
+})
+
+
+
+
