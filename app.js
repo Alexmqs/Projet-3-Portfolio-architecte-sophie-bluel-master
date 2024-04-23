@@ -177,8 +177,15 @@ function loginPage() {
 
 let loginBtn = document.getElementById("login")
 loginBtn.addEventListener("click",function() {
-    //Charger la login page
-    loginPage();
+    const loginButton = document.getElementById('login');
+    if (loginButton.textContent === "login") {
+        //Charger la login page
+        loginPage();
+    }else{
+        removeEditionMode()
+    }
+
+
 })
 
 function editionMode() {
@@ -193,6 +200,20 @@ function editionMode() {
     //Insert la div au sommet de la page en tant que premier enfant 
     document.body.insertBefore(editionModeBar, document.body.firstChild);
 
+    //Modification du bouton login par logout
+    const loginButton = document.getElementById('login');
+    loginButton.textContent = 'Logout';
+
+}
+
+function removeEditionMode() {
+    //change le bouton logout en login 
+    const loginButton = document.getElementById('login');
+    loginButton.textContent = 'login';
+
+    //Supprime la barre d'etition 
+    const editionModeBar = document.querySelector('.edition-mode-bar');
+    editionModeBar.remove();
 
 }
 
