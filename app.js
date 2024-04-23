@@ -1,6 +1,8 @@
-async function showcat() {
+async function showCat() {
     const categorie = await fetch("http://localhost:5678/api/categories");
     const data = await categorie.json();
+    //sauvegarde le html de base pour pouvoir le reload lors d'une connexion reussit 
+    mainContent = document.querySelector("main").innerHTML;
 
     //Creation du boutons Tous et le rend active 
     const divfilterallButtons = document.querySelector("#filterButtons");
@@ -46,7 +48,7 @@ async function showcat() {
     }
 }
 
-showcat();
+showCat();
 
 //Fonction qui permet de recuperer et afficher les images et la déscription sur le site 
 async function showPictures(id) {
@@ -54,7 +56,6 @@ async function showPictures(id) {
     //Recuperation des données de l'api concernant les images
     const picture = await fetch("http://localhost:5678/api/works");
     const data = await picture.json();
-
     // Si la page viens d'etre charger ou le bouton filtre tous est cliquer charge les images
     if ( id === "all") {
         document.querySelector(".gallery").innerHTML = ""; //Vide la gallery avant de générer 
@@ -111,6 +112,8 @@ async function showPictures(id) {
 
 // Partie pour générer la page de login 
 function loginPage() {
+    //Sauvegarde le main pour pouvoir le recharger lors d'une connection valide 
+
     //Supprimer le contenue du main 
     let main = document.querySelector("main"); 
     main.innerHTML = ""; 
@@ -149,8 +152,6 @@ function loginPage() {
         }
         const jsonLogin = JSON.stringify(loginData)
 
-        console.log(jsonLogin)
-
         //envoie des données a l'api
         fetch("http://localhost:5678/api/users/login", { 
             method: "POST", 
@@ -161,14 +162,37 @@ function loginPage() {
         .then(response => {
             if (!response.ok) {
                 console.log("Echec de connexion!");
+            } else {
+                console.log("Connexion réussie !");
+                //Recharge la page puis les filtres et images associés
+                document.querySelector("main").innerHTML = mainContent;
+                showCat();
+                //Viens ajouter a la page le mode édition
+                editionMode();
             }
-            console.log("Connexion réussie !");
+
         })
     })
 }
 
 let loginBtn = document.getElementById("login")
 loginBtn.addEventListener("click",function() {
-//Charger la login page
-    loginPage()
+    //Charger la login page
+    loginPage();
 })
+
+function editionMode() {
+    //Crée une div de la classe "edition-mode-bar" avec un span à l'intérieur.
+    const editionModeBar = document.createElement('div');
+    editionModeBar.classList.add('edition-mode-bar');
+    const spanEditionBar = document.createElement('span');
+    //Ajoute le contenue dans le span
+    spanEditionBar.innerHTML = '<i class="fa-solid fa-pen-to-square"></i> Mode édition';
+    //Ajoute le span dans la div
+    editionModeBar.appendChild(spanEditionBar);
+    //Insert la div au sommet de la page en tant que premier enfant 
+    document.body.insertBefore(editionModeBar, document.body.firstChild);
+
+
+}
+
