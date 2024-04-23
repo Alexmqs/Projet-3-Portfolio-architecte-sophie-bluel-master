@@ -1,8 +1,10 @@
 async function showCat() {
     const categorie = await fetch("http://localhost:5678/api/categories");
     const data = await categorie.json();
+
     //sauvegarde le html de base pour pouvoir le reload lors d'une connexion reussit 
     mainContent = document.querySelector("main").innerHTML;
+
 
     //Creation du boutons Tous et le rend active 
     const divfilterallButtons = document.querySelector("#filterButtons");
@@ -47,6 +49,7 @@ async function showCat() {
         divfilterButtons.appendChild(btnelement);
     }
 }
+
 
 showCat();
 
@@ -166,8 +169,8 @@ function loginPage() {
                 console.log("Connexion réussie !");
                 //Recharge la page puis les filtres et images associés
                 document.querySelector("main").innerHTML = mainContent;
-                showCat();
                 //Viens ajouter a la page le mode édition
+                showPictures("all")
                 editionMode();
             }
 
@@ -184,11 +187,12 @@ loginBtn.addEventListener("click",function() {
     }else{
         removeEditionMode()
     }
-
-
 })
 
+
+
 function editionMode() {
+
     //Crée une div de la classe "edition-mode-bar" avec un span à l'intérieur.
     const editionModeBar = document.createElement('div');
     editionModeBar.classList.add('edition-mode-bar');
@@ -204,6 +208,13 @@ function editionMode() {
     const loginButton = document.getElementById('login');
     loginButton.textContent = 'Logout';
 
+    //Ajout du span dans l'id edition-mode-projets
+    const portfolioSection = document.getElementById('edition-mode-projets')
+    const spanEditionProjets = document.createElement('span');
+    
+    spanEditionProjets.innerHTML = '<i class="fa-solid fa-pen-to-square"></i>Modifier';
+    portfolioSection.appendChild(spanEditionProjets)
+
 }
 
 function removeEditionMode() {
@@ -214,6 +225,10 @@ function removeEditionMode() {
     //Supprime la barre d'etition 
     const editionModeBar = document.querySelector('.edition-mode-bar');
     editionModeBar.remove();
+
+    //Supprime le bouton modifier 
+    const spanEditionProjets = document.querySelector('#edition-mode-projets span');
+    spanEditionProjets.remove();
 
 }
 

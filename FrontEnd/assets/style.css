@@ -164,9 +164,24 @@ li:hover {
 	color: white;
 }
 
+#edition-mode-projets {
+    display: flex;
+    justify-content: center; 
+}
 
 
+#edition-mode-projets h2 {
+    margin-right: 20px; 
+}
 
+#edition-mode-projets span {
+    align-self: center; 
+    margin-top: -25px; 
+}
+
+#edition-mode-projets span i{
+font-size: 20px;
+}
 
 
 #introduction {
