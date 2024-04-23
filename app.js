@@ -130,6 +130,7 @@ function loginPage() {
                 <input type="email" id="email" name="email" required><br>
                 <label for="password">Mot de passe</label><br>
                 <input type="password" id="password" name="password" required><br>
+                <p id="loginError"></p> 
                 <input type="submit" id = "submit" value="Se connecter">
             </form>
             <p><a href="/password-reset">Mot de passe oublié ?</a></p>
@@ -164,9 +165,12 @@ function loginPage() {
 
         .then(response => {
             if (!response.ok) {
-                console.log("Echec de connexion!");
+                document.getElementById('loginError').textContent = "L'email ou le mot de passe est incorrect"; 
+                document.getElementById('email').classList.add('input-error');
+                document.getElementById('password').classList.add('input-error');
             } else {
-                console.log("Connexion réussie !");
+                document.getElementById('email').classList.remove('input-error');
+                document.getElementById('password').classList.remove('input-error');
                 //Recharge la page puis les filtres et images associés
                 document.querySelector("main").innerHTML = mainContent;
                 //Viens ajouter a la page le mode édition
