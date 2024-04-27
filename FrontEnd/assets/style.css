@@ -148,9 +148,6 @@ li:hover {
 	color: black;
 }
 
-.input-error {
-	background-color: rgba(255, 0, 0, 0.144);
-}
 
 #loginError {
 	font-size: 18px;

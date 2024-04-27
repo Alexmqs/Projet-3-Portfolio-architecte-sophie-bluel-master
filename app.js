@@ -165,12 +165,8 @@ function loginPage() {
 
         .then(response => {
             if (!response.ok) {
-                document.getElementById('loginError').textContent = "L'email ou le mot de passe est incorrect"; 
-                document.getElementById('email').classList.add('input-error');
-                document.getElementById('password').classList.add('input-error');
+                document.getElementById('loginError').textContent = "Erreur dans l’identifiant ou le mot de passe"; 
             } else {
-                document.getElementById('email').classList.remove('input-error');
-                document.getElementById('password').classList.remove('input-error');
                 //Recharge la page puis les filtres et images associés
                 document.querySelector("main").innerHTML = mainContent;
                 //Viens ajouter a la page le mode édition
