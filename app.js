@@ -191,14 +191,17 @@ loginBtn.addEventListener("click",function() {
 
 
 
-function editionMode() {
+async function editionMode() {
 
     //Crée une div de la classe "edition-mode-bar" avec un span à l'intérieur.
     const editionModeBar = document.createElement('div');
     editionModeBar.classList.add('edition-mode-bar');
     const spanEditionBar = document.createElement('span');
+  
+
     //Ajoute le contenue dans le span
     spanEditionBar.innerHTML = '<i class="fa-solid fa-pen-to-square"></i> Mode édition';
+
     //Ajoute le span dans la div
     editionModeBar.appendChild(spanEditionBar);
     //Insert la div au sommet de la page en tant que premier enfant 
@@ -211,11 +214,15 @@ function editionMode() {
     //Ajout du span dans l'id edition-mode-projets
     const portfolioSection = document.getElementById('edition-mode-projets')
     const spanEditionProjets = document.createElement('span');
+    spanEditionProjets.classList.add("modif-btn");
     
     spanEditionProjets.innerHTML = '<i class="fa-solid fa-pen-to-square"></i>Modifier';
     portfolioSection.appendChild(spanEditionProjets)
-
+    modal()
+  
 }
+
+
 
 function removeEditionMode() {
     //change le bouton logout en login 
@@ -232,3 +239,41 @@ function removeEditionMode() {
 
 }
 
+
+
+
+
+function modal() {
+
+    const modif = document.querySelector(".modif-btn");
+    modif.onclick = function() {
+        const modal = document.querySelector(".modal");
+        modal.style.display = "block";
+
+        showModalPicture();
+    }
+}
+
+
+async function showModalPicture() {
+    const picture = await fetch("http://localhost:5678/api/works");
+    const data = await picture.json();
+
+    for (let i = 0; i < data.length; i++) {
+        const divmodalgallery = document.getElementById("gallerymodal");
+        const imageModalContainer = document.createElement("div");
+        const imageModalElement = document.createElement("img");
+        const trashModalIcon = document.createElement("i");
+
+        imageModalElement.src = data[i].imageUrl;
+
+        imageModalContainer.classList.add("image-modal-container");
+        trashModalIcon.classList.add("fa-solid", "fa-trash-can", "trash-modal-icon");
+
+        imageModalContainer.appendChild(imageModalElement);
+        imageModalContainer.appendChild(trashModalIcon);
+
+        divmodalgallery.appendChild(imageModalContainer);
+    }
+
+}
