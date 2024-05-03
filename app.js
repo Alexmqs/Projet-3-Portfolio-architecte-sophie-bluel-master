@@ -74,12 +74,12 @@ async function showPictures(id) {
             const imageElement = document.createElement("img");
             const descriptionElement = document.createElement("figcaption");
         
-            imageElement.src = data[i].imageUrl
-            descriptionElement.textContent = data[i].title
+            imageElement.src = data[i].imageUrl;
+            descriptionElement.textContent = data[i].title;
         
             // Dans ma div gallery ajoute l'image et de la déscription 
             figureElement.appendChild(imageElement);
-            figureElement.appendChild(descriptionElement)
+            figureElement.appendChild(descriptionElement);
         
             divgallery.appendChild(figureElement);
         }
@@ -99,12 +99,12 @@ async function showPictures(id) {
                 const imageElement = document.createElement("img");
                 const descriptionElement = document.createElement("figcaption");
   //        
-                imageElement.src = data[i].imageUrl
-                descriptionElement.textContent = data[i].title
+                imageElement.src = data[i].imageUrl;
+                descriptionElement.textContent = data[i].title;
   //        
                 // Dans ma div gallery ajoute l'image et de la déscription 
                 figureElement.appendChild(imageElement);
-                figureElement.appendChild(descriptionElement)
+                figureElement.appendChild(descriptionElement);
   //        
                 divgallery.appendChild(figureElement);
            }
@@ -112,6 +112,7 @@ async function showPictures(id) {
     }
 }
 
+let tokenConnection;
 
 // Partie pour générer la page de login 
 function loginPage() {
@@ -167,11 +168,17 @@ function loginPage() {
             if (!response.ok) {
                 document.getElementById('loginError').textContent = "Erreur dans l’identifiant ou le mot de passe"; 
             } else {
-                //Recharge la page puis les filtres et images associés
-                document.querySelector("main").innerHTML = mainContent;
-                //Viens ajouter a la page le mode édition
-                showPictures("all")
-                editionMode();
+                response.json().then(data => {
+                    //Enregistrement du token 
+                    const token = data.token;
+                    tokenConnection = token;
+        
+                    //Recharge la page puis les filtres et images associés
+                    document.querySelector("main").innerHTML = mainContent;
+                    //Viens ajouter a la page le mode édition
+                    showPictures("all")
+                    editionMode();
+                });
             }
 
         })
@@ -225,6 +232,8 @@ async function editionMode() {
 
 
 function removeEditionMode() {
+    tokenConnection = null;
+
     //change le bouton logout en login 
     const loginButton = document.getElementById('login');
     loginButton.textContent = 'login';
@@ -235,11 +244,9 @@ function removeEditionMode() {
 
     //Supprime le bouton modifier 
     const spanEditionProjets = document.querySelector('#edition-mode-projets span');
-    spanEditionProjets.remove();
+    spanEditionProjets.remove()
 
 }
-
-
 
 
 
