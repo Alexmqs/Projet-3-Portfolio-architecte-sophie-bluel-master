@@ -42,41 +42,15 @@
 			<h2>Mes Projets</h2>
 		</div>
 
-		<dialog id="modal" class="modal" style="display: none;">
+		<dialog id="modal1" class="modal" aria-hidden="true" role="dialog" aria-label="title-modal" style="display: none;">
 			<div id = "modal-galery">
 				<i class="fa-solid fa-xmark close-icon"></i>
-				<h3> Galerie photo </h3>
+				<h3 class="title-modal"> Galerie photo </h3>
 				<div id = "gallerymodal"></div>
 				<div class="border-line"></div>
 				<button class="submit-add-button">Ajouter une photo</button>
 			</div>
 
-			<div id = "modal-add-picture" style="display: none;">
-				<h3> Ajout photo </h3>
-
-				<div class = "modal-add-picture-file">
-					<div class="modal-upload-section">
-						<i class="fa-solid fa-image"></i>
-						<button class="upload-btn">+ Ajouter photo</button>
-						<p>jpg, png ; 4mo max</p>
-					</div>
-
-					<form>
-						<label for="titre">Titre</label>
-						<input type="text" id="titre" name="titre">
-						
-						<label for="categorie">Catégorie</label>
-						<select id="categorie" name="categorie">
-
-						</select>
-						<div class="validate-btn">
-							<input type="submit" value="Valider"></input>
-						</div>
-					</form>
-
-				</div>
-
-			</div>
 		</dialog>
 
 			<!--Ajout des boutons pour filtrer-->

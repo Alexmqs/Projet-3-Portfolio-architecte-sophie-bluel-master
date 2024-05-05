@@ -225,7 +225,7 @@ async function editionMode() {
     
     spanEditionProjets.innerHTML = '<i class="fa-solid fa-pen-to-square"></i>Modifier';
     portfolioSection.appendChild(spanEditionProjets)
-    modal()
+    openModal()
   
 }
 
@@ -249,15 +249,33 @@ function removeEditionMode() {
 }
 
 
+let targetModal = null
+const focusableSelector = 'button, a , input, textarea'
+let focusables = []
+let previouslyFocusableElement = null
 
-function modal() {
-
+function openModal() {
     const modif = document.querySelector(".modif-btn");
     modif.onclick = function() {
         const modal = document.querySelector(".modal");
+        focusables = Array.from(modal.querySelectorAll(focusableSelector));
+        const trashIcons = Array.from(modal.querySelectorAll('.trash-modal-icon'));
+        focusables.push(...trashIcons);
+        previouslyFocusableElement = document.querySelector(':focus');
         modal.style.display = "block";
+        focusables[0].focus();
+        modal.setAttribute('aria-hidden', false);
+        modal.setAttribute('aria-modal', true);
+
+        targetModal = modal;
 
         showModalPicture();
+
+        window.onclick = function(event) {
+            if (event.target === modal) {
+                closeModal();
+            }
+        };
     }
 }
 
@@ -281,6 +299,76 @@ async function showModalPicture() {
         imageModalContainer.appendChild(trashModalIcon);
 
         divmodalgallery.appendChild(imageModalContainer);
+
+        trashModalIcon.addEventListener("click", function(event) {
+            event.preventDefault();
+            deletePicture(data[i].id); 
+        });
     }
 
 }
+
+async function deletePicture(imageId) {
+    const response = await fetch(`http://localhost:5678/api/works/${imageId}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${tokenConnection}`
+        },
+    });
+
+    if (response.ok) {
+        const divmodalgallery = document.getElementById("gallerymodal");
+        divmodalgallery.innerHTML = "";
+        showModalPicture()
+    } else {
+        console.error('Erreur lors de la suppression de l\'image:');
+    }
+}
+
+
+function closeModal() {
+    targetModal.style.display = "none";
+    targetModal.setAttribute('aria-hidden', true);
+    targetModal.setAttribute('aria-modal', false);
+    const divmodalgallery = document.getElementById("gallerymodal");
+    divmodalgallery.innerHTML = "";
+
+    if (previouslyFocusableElement !== null) previouslyFocusableElement.focus()
+}
+
+
+const focusInModal = function (e) {
+    e.preventDefault();
+    let index = focusables.findIndex(f => f === targetModal.querySelector(':focus'));
+    if (e.shiftKey === true) {
+        index--;
+    } else {
+        index++; 
+    }   
+    if (index >= focusables.length) {
+        index = 0;
+    }
+    if (index < 0) {
+        index = focusables.length - 1;
+    }
+    focusables[index].focus();
+}
+
+
+
+document.addEventListener('click', function(event) {
+    if (event.target.classList.contains('close-icon')) {
+        closeModal();
+    }
+});
+
+window.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" || e.key === "Esc") {
+        closeModal(e)
+    }
+    if (e.key === "Tab" && targetModal !== null) {
+        focusInModal(e)
+    }
+});
+

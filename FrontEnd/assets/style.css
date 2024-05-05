@@ -188,12 +188,12 @@ li:hover {
 #edition-mode-projets span {
     align-self: center; 
     margin-top: -25px; 
+	cursor: pointer;
 }
 
 #edition-mode-projets span i{
-font-size: 20px;
+	font-size: 20px;
 }
-
 
 #introduction {
 	display: flex;
@@ -249,159 +249,8 @@ font-size: 20px;
     color: white;
 }
 
-/*   Gestion modal   */
-/*   Gestion modal Galerie photo   */
-
-#modal {
-	border-radius: 10px;
-	border: none;
-	width: 630px;
-	height: 688px;
-	box-shadow: 0 0 15px rgba(0,0,0,0.2);
-
-}
-#modal-galery{
-	text-align: center;
-	margin-left: 10%;
-	margin-right: 10%;
-}
-
-.close-icon {
-    position: absolute;
-    top: 25px; 
-    right: 25px; 
-	font-size: 20px;
-	cursor: pointer; 
-}
-
-#modal h3 {
-	font-size: 26px;	
-	margin-top: 25px;
-}
-
-#gallerymodal {
-	margin-top: 50px;
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-gap: 10px;
-	grid-row-gap: 20px;
-	max-height: 80vh; 
-    overflow-y: auto; 
-}
-
-#gallerymodal img {
-    max-width: 100%;
-    height: auto;
-}
 
 
-.submit-add-button {
-	border: none;
-	cursor: pointer;
-	padding: 10px 60px; 
-	font-family: 'Syne';
-	font-weight: 700;
-	color: white;
-	background-color: #1D6154;
-	margin : 2em auto ;
-	text-align: center;
-	border-radius: 60px ;
-}
-
-.border-line {
-    height: 1px; 
-    background-color: #B3B3B3; 
-    width: 100%; 
-	margin-top: 60px;
-	margin-bottom: 20px;
-}
-
-
-
-.image-modal-container {
-    position: relative;
-    display: inline-block; 
-}
-
-.image-modal-container img {
-    display: block; 
-    width: 100%; 
-    height: auto; 
-}
-
-.trash-modal-icon {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    z-index: 1;
-    color: white; 
-    background-color: black; 
-    padding: 5px; 
-}
-
-/*   Gestion modal Ajout photo   */
-  
-#modal-add-picture {
-	margin-left: 10%;
-	margin-right: 10%;
-}
-
-#modal-add-picture h3{
-	text-align: center;
-	margin-bottom: 10px;
-}
-
-
-.modal-upload-section {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	padding: 20px; 
-	background-color:#E8F1F6; 
-	border-radius: 10px; 
-	margin-bottom: 20px; 
-}
-
-.modal-upload-section i {
-	font-size: 60px;
-	color: #CBD6DC; 
-}
-
-.modal-upload-section .upload-btn {
-	background-color: #CBD6DC;
-	border: none;
-	color: #306685;   
-	padding: 15px 40px;
-	border-radius: 50px;
-	margin-top: 10px;
-	cursor: pointer; 	
-	margin-bottom: 5px;
-}
-
-.modal-add-picture-file form {
-	margin-top: 20px; 
-}
-
-
-.modal-add-picture-file label {
-	display: block;
-	margin-bottom: 8px;
-}
-
-.modal-add-picture-file input, .modal-add-picture-file select {
-	width: 100%;
-	padding: 15px;
-	margin-bottom: 20px;
-	border: none;
-	outline: none;
-
-	box-shadow: 0px 4px 14px 0px #00000017;
-}
-
-.modal-add-picture-file .validate-btn {
-    display: flex;
-    justify-content: center;
-}
 
 
 
@@ -467,3 +316,113 @@ footer nav ul {
 	margin: 2em
 }
 
+
+
+/* Gestion de la modal */
+.modal {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.8);
+}
+
+#modal-galery{
+	position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+	width: calc(630px - 10%);
+	height: 688px;
+	background-color: #FFF;
+	text-align: center;
+	border-radius: 10px;
+	border: none;
+	padding-left: 5%; 
+    padding-right: 5%;
+}
+
+
+/* Gestion de la modal partie modal-galery*/
+.close-icon {
+    position: absolute;
+    top: 25px; 
+    right: 25px; 
+	font-size: 20px;
+	cursor: pointer; 
+}
+
+.title-modal {
+	font-size: 26px;	
+	margin-top: 50px;
+}
+
+#gallerymodal {
+	margin-top: 50px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 10px;
+	grid-row-gap: 20px;
+	max-height: 80vh; 
+    overflow-y: auto; 
+}
+
+#gallerymodal img {
+    max-width: 100%;
+    height: auto;
+}
+
+
+.submit-add-button {
+	border: none;
+	outline: none;
+	cursor: pointer;
+	padding: 10px 60px; 
+	font-family: 'Syne';
+	font-weight: 700;
+	color: white;
+	background-color: #1D6154;
+	text-align: center;
+	border-radius: 60px ;
+	margin: 25px auto;
+}
+
+.border-line {
+    height: 1px; 
+    background-color: #B3B3B3; 
+    width: 100%; 
+	margin-top: 50px;
+	margin-bottom: 20px;
+}
+
+.image-modal-container {
+    position: relative;
+    display: inline-block; 
+}
+
+.image-modal-container img {
+    display: block; 
+    width: 100%; 
+    height: auto; 
+}
+
+.trash-modal-icon {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    color: white; 
+    background-color: black; 
+	width: 17px;
+	height: 17px;
+	display: flex; 
+    justify-content: center; 
+    align-items: center; 
+	font-size: 10px;
+	cursor: pointer;
+}
+
+*:focus {
+	box-shadow: 0 0 2px blue;
+
+}
