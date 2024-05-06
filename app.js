@@ -143,7 +143,6 @@ function loginPage() {
     //Ecoute l'evenement du formulaire  id="loginForm"
 
     document.getElementById("loginForm").addEventListener("submit", function(event) {
-        //Pour ne pas recharger la page
         event.preventDefault();
 
         //Recuperation du mail et du mot de passe 
@@ -173,9 +172,7 @@ function loginPage() {
                     const token = data.token;
                     tokenConnection = token;
         
-                    //Recharge la page puis les filtres et images associés
                     document.querySelector("main").innerHTML = mainContent;
-                    //Viens ajouter a la page le mode édition
                     showPictures("all")
                     editionMode();
                 });
@@ -185,6 +182,7 @@ function loginPage() {
     })
 }
 
+//Permet d'ouvrire la page de login ou de se déconnecter
 let loginBtn = document.getElementById("login")
 loginBtn.addEventListener("click",function() {
     const loginButton = document.getElementById('login');
@@ -197,7 +195,7 @@ loginBtn.addEventListener("click",function() {
 })
 
 
-
+//Ouvre le mode edition 
 async function editionMode() {
 
     //Crée une div de la classe "edition-mode-bar" avec un span à l'intérieur.
@@ -230,7 +228,7 @@ async function editionMode() {
 }
 
 
-
+//Supprime le mode edition 
 function removeEditionMode() {
     tokenConnection = null;
 
@@ -254,6 +252,7 @@ const focusableSelector = 'button, a , input, textarea'
 let focusables = []
 let previouslyFocusableElement = null
 
+//Permet d'ouvrir la modal 
 function openModal() {
     const modif = document.querySelector(".modif-btn");
     modif.onclick = function() {
@@ -270,7 +269,7 @@ function openModal() {
         targetModal = modal;
 
         showModalPicture();
-
+        //Ferme la modal lors d'un click exterieur à celle-ci
         window.onclick = function(event) {
             if (event.target === modal) {
                 closeModal();
@@ -279,18 +278,21 @@ function openModal() {
     }
 }
 
-
+//Fait apparaitre les photos dans la modal modal-galery
 async function showModalPicture() {
     const picture = await fetch("http://localhost:5678/api/works");
     const data = await picture.json();
 
+    const divmodalgallery = document.getElementById("gallerymodal");
+    divmodalgallery.innerHTML = ""; // Vide la galerie modal avant de générer
+
     for (let i = 0; i < data.length; i++) {
-        const divmodalgallery = document.getElementById("gallerymodal");
         const imageModalContainer = document.createElement("div");
         const imageModalElement = document.createElement("img");
         const trashModalIcon = document.createElement("i");
 
         imageModalElement.src = data[i].imageUrl;
+        imageModalContainer.dataset.imageId = data[i].id;
 
         imageModalContainer.classList.add("image-modal-container");
         trashModalIcon.classList.add("fa-solid", "fa-trash-can", "trash-modal-icon");
@@ -299,36 +301,82 @@ async function showModalPicture() {
         imageModalContainer.appendChild(trashModalIcon);
 
         divmodalgallery.appendChild(imageModalContainer);
-
-        trashModalIcon.addEventListener("click", function(event) {
-            event.preventDefault();
-            deletePicture(data[i].id); 
-        });
     }
-
 }
 
-async function deletePicture(imageId) {
-    const response = await fetch(`http://localhost:5678/api/works/${imageId}`, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${tokenConnection}`
-        },
+// Ajoute un écouteur d'événements au clic sur l'icône de corbeille une seule fois
+document.addEventListener('click', async function(event) {
+    //Supprime une image
+    if (event.target.classList.contains('trash-modal-icon')) {
+        event.preventDefault();
+        // Récupère l'élément parent contenant l'image et la corbeille
+        const imageContainer = event.target.parentElement;
+        // Récupère l'ID de l'image à supprimer à partir de l'attribut personnalisé
+        const imageId = imageContainer.dataset.imageId;
+        // Supprime l'image en faisant directement la requête DELETE
+        await fetch(`http://localhost:5678/api/works/${imageId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${tokenConnection}`
+            },
+        });
+        console.log("l'image a bien été supprimée");
+        // Rafraîchit la galerie modal après suppression
+        await showModalPicture();
+        await showPictures("all");
+    }
+
+    //Permet de passer à modal-add-picture modal-galery
+    if (event.target.classList.contains('submit-add-button')) {
+        event.preventDefault();
+        modalAddPictureOpen();
+    }
+
+    //Permet de revenir à 
+    if (event.target.classList.contains('back-icon')) {
+        event.preventDefault();
+        document.getElementById("modal-add-picture").style.display = "none";
+        document.getElementById("modal-galery").style.display = "block";
+        showModalPicture()
+    }
+
+});
+
+async function modalAddPictureOpen() {
+    const categorie = await fetch("http://localhost:5678/api/categories");
+    const data = await categorie.json();
+
+    //Fait apparaitre modal-add-picture et disparaitre modal-galery
+    document.getElementById("modal-galery").style.display = "none";
+    document.getElementById("modal-add-picture").style.display = "block";
+
+    //vide les categories
+    const selectElement = document.getElementById("categorie");    
+    selectElement.innerHTML = '';
+
+    //Ajoute une option vide 
+    const emptyOption = document.createElement('option');
+    emptyOption.value = "none";
+    selectElement.appendChild(emptyOption);
+
+    //Ajoute les option de catégorie via l'api 
+    data.forEach(category => {
+        const option = document.createElement('option');
+        option.value = category.name; // Assurez-vous de remplacer "value" par la propriété correcte de vos données
+        option.textContent = category.name; // Assurez-vous de remplacer "label" par la propriété correcte de vos données
+        selectElement.appendChild(option);
     });
 
-    if (response.ok) {
-        const divmodalgallery = document.getElementById("gallerymodal");
-        divmodalgallery.innerHTML = "";
-        showModalPicture()
-    } else {
-        console.error('Erreur lors de la suppression de l\'image:');
-    }
+
 }
 
 
+//Fonction qui permet de fermer la modal
 function closeModal() {
     targetModal.style.display = "none";
+    document.getElementById("modal-add-picture").style.display = "block";
+    document.getElementById("modal-galery").style.display = "none";
     targetModal.setAttribute('aria-hidden', true);
     targetModal.setAttribute('aria-modal', false);
     const divmodalgallery = document.getElementById("gallerymodal");
@@ -337,7 +385,7 @@ function closeModal() {
     if (previouslyFocusableElement !== null) previouslyFocusableElement.focus()
 }
 
-
+//Permet de garder le focus dans la modal 
 const focusInModal = function (e) {
     e.preventDefault();
     let index = focusables.findIndex(f => f === targetModal.querySelector(':focus'));
@@ -356,18 +404,24 @@ const focusInModal = function (e) {
 }
 
 
-
+//Ferme la modal avec un click sur la croix 
 document.addEventListener('click', function(event) {
     if (event.target.classList.contains('close-icon')) {
+        event.preventDefault();
         closeModal();
     }
 });
 
+
 window.addEventListener("keydown", function (e) {
+    //Ferme la modal avec Echape
     if (e.key === "Escape" || e.key === "Esc") {
+        e.preventDefault();
         closeModal(e)
     }
+    //Pour le focus dans la modal avec tab
     if (e.key === "Tab" && targetModal !== null) {
+        e.preventDefault();
         focusInModal(e)
     }
 });
