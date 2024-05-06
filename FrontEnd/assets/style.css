@@ -328,7 +328,7 @@ footer nav ul {
 	background-color: rgba(0, 0, 0, 0.8);
 }
 
-#modal-galery{
+#modal-galery, #modal-add-picture{
 	position: fixed;
     top: 50%;
     left: 50%;
@@ -343,6 +343,15 @@ footer nav ul {
     padding-right: 5%;
 }
 
+*:focus {
+	box-shadow: 0 0 2px blue;
+}
+
+.title-modal {
+	font-size: 26px;	
+	margin-top: 70px;
+}
+
 
 /* Gestion de la modal partie modal-galery*/
 .close-icon {
@@ -353,10 +362,6 @@ footer nav ul {
 	cursor: pointer; 
 }
 
-.title-modal {
-	font-size: 26px;	
-	margin-top: 50px;
-}
 
 #gallerymodal {
 	margin-top: 50px;
@@ -375,6 +380,10 @@ footer nav ul {
 
 
 .submit-add-button {
+	position: absolute;
+    bottom: 25px; 
+	left: 50%;
+	transform: translateX(-50%);
 	border: none;
 	outline: none;
 	cursor: pointer;
@@ -389,9 +398,13 @@ footer nav ul {
 }
 
 .border-line {
+	position: absolute;
+    bottom: 100px; 
+	left: 50%;
+	transform: translateX(-50%);
     height: 1px; 
     background-color: #B3B3B3; 
-    width: 100%; 
+    width: 70%; 
 	margin-top: 50px;
 	margin-bottom: 20px;
 }
@@ -422,7 +435,83 @@ footer nav ul {
 	cursor: pointer;
 }
 
-*:focus {
-	box-shadow: 0 0 2px blue;
+/* Gestion de la modal partie modal-add-picture*/
+.back-icon{
+	position: absolute;
+    top: 25px; 
+    left: 25px; 
+	font-size: 20px;
+	cursor: pointer; 
+}
+
+.modal-upload-section {
+	display: flex;
+	flex-direction: column;
+	background-color: #E8F1F6 ;
+	border-radius: 5px;
+	height: 175px;
+	margin-top: 45px;
+}
+
+.modal-upload-section i {
+	color: #B9C5CC;
+	font-size: 76px;
+	padding: 15px;
+}
+
+.upload-btn {
+	outline: none;
+	border: none;
+	width: 35%;
+	padding: 10px;
+	background: #CBD6DC;
+	border-radius: 50px;
+	cursor: pointer;
+	margin: 0 auto;
+	font-size: 14px;
+	color: #306685;
+	font-weight: 550;
+	line-height: 16.42px;
+}
+
+
+.modal-upload-section p{
+	margin-top: 5px;
+	font-size: 10px;
+	font-weight: 400;
+	line-height: 11.73px;
+	
+}
+
+.form-add-picture{
+	display: flex;
+	flex-direction: column;
+	margin-top: 40px;
+}
+
+.form-add-picture label {
+    text-align: left;
+	margin-bottom: 5px;
+}
+
+.form-add-picture input[type="text"], #categorie {
+  padding: 15px;
+  margin-bottom: 20px;
+  margin-top: 5px;
+  border: none;
+  outline: none;
+  box-shadow: 0px 4px 14px 0px #00000017;
 
 }
+
+
+
+.validate-btn {
+	position: absolute;
+    bottom: 25px; 
+	left: 50%;
+	transform: translateX(-50%);
+	cursor: pointer; 
+
+}
+
