@@ -50,7 +50,6 @@ async function showCat() {
     }
 }
 
-
 showCat();
 
 //Fonction qui permet de recuperer et afficher les images et la déscription sur le site 
@@ -112,8 +111,8 @@ async function showPictures(id) {
     }
 }
 
-let tokenConnection;
 
+let tokenConnection;
 // Partie pour générer la page de login 
 function loginPage() {
     //Sauvegarde le main pour pouvoir le recharger lors d'une connection valide 
@@ -128,7 +127,7 @@ function loginPage() {
             <h2>Log In</h2>
             <form id="loginForm" action="login" method="post">
                 <label for="email">Email</label><br>
-                <input type="email" id="email" name="email" required><br>
+                <input type="email" id="email" name="email" autocomplete="email" required><br>
                 <label for="password">Mot de passe</label><br>
                 <input type="password" id="password" name="password" required><br>
                 <p id="loginError"></p> 
@@ -184,7 +183,8 @@ function loginPage() {
 
 //Permet d'ouvrire la page de login ou de se déconnecter
 let loginBtn = document.getElementById("login")
-loginBtn.addEventListener("click",function() {
+loginBtn.addEventListener("click",function(event) {
+    event.preventDefault();
     const loginButton = document.getElementById('login');
     if (loginButton.textContent === "login") {
         //Charger la login page
@@ -368,6 +368,102 @@ async function modalAddPictureOpen() {
         selectElement.appendChild(option);
     });
 
+    addpicture()
+}
+
+let selectedFile = null;
+function addpicture() {
+    // Écoute de l'événement clic sur le bouton "Ajouter photo"
+    document.querySelector('.upload-btn').addEventListener('click', function(event) {
+        event.preventDefault();
+        const fileInput = document.createElement('input');
+
+        // Limite la taille du fichier à 4 Mo et restreint les types de fichiers à jpg et png
+        fileInput.type = 'file';
+        fileInput.accept = 'image/jpeg, image/png';
+        fileInput.maxlength = 4 * 1024 * 1024;
+
+        fileInput.addEventListener('change', function(event) {
+            event.preventDefault();
+            selectedFile = event.target.files[0]; // Récupère le premier fichier sélectionné
+            if (selectedFile) {
+                // Vérifie si la taille du fichier est inférieure ou égale à 4 Mo
+                if (selectedFile.size <= 4 * 1024 * 1024) {
+                    document.querySelector('.upload-section').style.display = "none";
+
+                    // Affiche l'image à l'intérieur de la section
+                    const reader = new FileReader();
+                    reader.onload = function() {
+                        const imgElement = document.createElement('img');
+                        imgElement.src = reader.result;
+                        document.querySelector('.modal-upload-section').appendChild(imgElement);
+                    };
+                    reader.readAsDataURL(selectedFile);
+                } else {
+                    console.error('La taille du fichier dépasse 4 Mo.');
+                }
+            }
+        });
+
+        // Clique automatiquement sur l'élément input de type file pour ouvrir la boîte de dialogue de sélection de fichier
+        fileInput.click();
+    });
+
+    document.querySelector('.form-add-picture').addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        // Récupère les valeurs du formulaire
+        const title = document.getElementById('titre').value;
+        const categoryName = document.getElementById('categorie').value;
+        
+        // Vérifie si la catégorie sélectionnée est vide
+        if (categoryName.trim() === '') {
+            console.error('Veuillez sélectionner une catégorie.');
+            return;
+        }
+
+        // Récupérer l'ID de la catégorie correspondante
+        let categoryId = null;
+        const categories = await fetch("http://localhost:5678/api/categories");
+        const categoryData = await categories.json();
+        categoryData.forEach(category => {
+            if (category.name === categoryName) {
+                categoryId = category.id;
+            }
+        });
+    
+        // Vérifie si l'ID de la catégorie a été trouvé
+        if (categoryId === null) {
+            console.error('Catégorie non trouvée.');
+            return;
+        }
+    
+        // Création d'un objet pour stocker les données à envoyer
+        const formData = new FormData();
+        formData.append('title', title);
+        formData.append('category', categoryId);
+        formData.append('image', selectedFile );
+    
+        // Envoi des données à votre API
+        fetch('http://localhost:5678/api/works', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Authorization': `Bearer ${tokenConnection}`
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log('Données envoyées avec succès !');
+                // Réinitialiser le formulaire ou effectuer d'autres actions après l'envoi réussi
+            } else {
+                console.error('Erreur lors de l\'envoi des données à l\'API.');
+            }
+        })
+        .catch(error => {
+            console.error('Erreur lors de l\'envoi des données :', error);
+        });
+    });
 
 }
 
