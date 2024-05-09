@@ -278,6 +278,19 @@ function openModal() {
     }
 }
 
+//Fonction qui permet de fermer la modal
+function closeModal() {
+    targetModal.style.display = "none";
+    document.getElementById("modal-add-picture").style.display = "block";
+    document.getElementById("modal-galery").style.display = "none";
+    targetModal.setAttribute('aria-hidden', true);
+    targetModal.setAttribute('aria-modal', false);
+    const divmodalgallery = document.getElementById("gallerymodal");
+    divmodalgallery.innerHTML = "";
+
+    if (previouslyFocusableElement !== null) previouslyFocusableElement.focus()
+}
+
 //Fait apparaitre les photos dans la modal modal-galery
 async function showModalPicture() {
     const picture = await fetch("http://localhost:5678/api/works");
@@ -372,6 +385,7 @@ async function modalAddPictureOpen() {
 }
 
 let selectedFile = null;
+//Fonction pour ajouter une photo
 function addpicture() {
     // Écoute de l'événement clic sur le bouton "Ajouter photo"
     document.querySelector('.upload-btn').addEventListener('click', function(event) {
@@ -465,20 +479,6 @@ function addpicture() {
         });
     });
 
-}
-
-
-//Fonction qui permet de fermer la modal
-function closeModal() {
-    targetModal.style.display = "none";
-    document.getElementById("modal-add-picture").style.display = "block";
-    document.getElementById("modal-galery").style.display = "none";
-    targetModal.setAttribute('aria-hidden', true);
-    targetModal.setAttribute('aria-modal', false);
-    const divmodalgallery = document.getElementById("gallerymodal");
-    divmodalgallery.innerHTML = "";
-
-    if (previouslyFocusableElement !== null) previouslyFocusableElement.focus()
 }
 
 //Permet de garder le focus dans la modal 
