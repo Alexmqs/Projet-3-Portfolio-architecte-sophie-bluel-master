@@ -52,8 +52,6 @@ body {
 	margin:auto;
 	font-family: 'Work Sans' ;
 	font-size: 14px;
-	background-color: #FFFEF8;
-	;
 }
 header {
 	display: flex;
@@ -100,6 +98,114 @@ nav li {
 li:hover {
 	color: #B1663C;
 }
+#introduction {
+	display: flex;
+	align-items: center;
+}
+#introduction figure {
+	flex: 1
+}
+#introduction img {
+	display: block;
+	margin: auto;
+	width: 80%;
+}
+
+#introduction article {
+	flex: 1
+}
+#introduction h2 {
+	margin-bottom: 1em;
+}
+
+#introduction p {
+	margin-bottom: 0.5em;
+}
+#portfolio h2 {
+	text-align: center;
+	margin-bottom: 1em;
+}
+.gallery {
+	width: 100%;
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	grid-column-gap: 20px;
+	grid-row-gap: 20px;
+}
+
+.gallery img {
+	width: 100%;
+
+}
+#contact {
+	width: 50%;
+margin: auto;
+}
+#contact > * {
+	text-align: center;
+
+}
+#contact h2{
+	margin-bottom: 20px;
+}
+#contact form {
+	text-align: left;
+	margin-top:30px;
+	display: flex;
+	flex-direction: column;
+}
+
+#contact input {
+	height: 50px;
+	font-size: 1.2em;
+	border: none;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+}
+#contact label {
+	margin: 2em 0 1em 0;
+}
+#contact textarea {
+	border: none;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+}
+
+input[type="submit"]{
+	font-family: 'Syne';
+	font-weight: 700;
+	color: white;
+	background-color: #1D6154;
+	margin : 2em auto ;
+	width: 180px;
+	text-align: center;
+	border-radius: 60px ;
+}
+
+footer nav ul {
+	display: flex;
+	justify-content: flex-end;
+	margin: 2em
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #login {
@@ -159,6 +265,7 @@ li:hover {
 }
 
 
+
 /* Ajout du style pour le mode edition */
 .edition-mode-bar {
 	background-color: black;
@@ -185,42 +292,12 @@ li:hover {
     margin-right: 20px; 
 }
 
-#edition-mode-projets span {
+#edition-mode-projets button {
     align-self: center; 
     margin-top: -25px; 
 	cursor: pointer;
-}
-
-#edition-mode-projets span i{
-	font-size: 20px;
-}
-
-#introduction {
-	display: flex;
-	align-items: center;
-}
-#introduction figure {
-	flex: 1
-}
-#introduction img {
-	display: block;
-	margin: auto;
-	width: 80%;
-}
-
-#introduction article {
-	flex: 1
-}
-#introduction h2 {
-	margin-bottom: 1em;
-}
-
-#introduction p {
-	margin-bottom: 0.5em;
-}
-#portfolio h2 {
-	text-align: center;
-	margin-bottom: 1em;
+	border: none;
+	background-color: transparent;
 }
 
 
@@ -251,18 +328,7 @@ li:hover {
 
 
 
-.gallery {
-	width: 100%;
-	display: grid;
-	grid-template-columns: 1fr 1fr 1fr;
-	grid-column-gap: 20px;
-	grid-row-gap: 20px;
-}
 
-.gallery img {
-	width: 100%;
-
-}
 
 
 /* Gestion de la modal */
@@ -290,25 +356,22 @@ li:hover {
     padding-right: 5%;
 }
 
-*:focus {
-	box-shadow: 0 0 2px blue;
+
+
+.close-icon {
+    position: absolute;
+    top: 25px; 
+    right: 25px; 
+	font-size: 20px;
+	border: none;
+	background-color: transparent;
+	cursor: pointer; 
 }
 
 .title-modal {
 	font-size: 26px;	
 	margin-top: 70px;
 }
-
-
-/* Gestion de la modal partie modal-galery*/
-.close-icon {
-    position: absolute;
-    top: 25px; 
-    right: 25px; 
-	font-size: 20px;
-	cursor: pointer; 
-}
-
 
 #gallerymodal {
 	margin-top: 50px;
@@ -324,7 +387,6 @@ li:hover {
     max-width: 100%;
     height: auto;
 }
-
 
 .submit-add-button {
 	position: absolute;
@@ -356,17 +418,11 @@ li:hover {
 	margin-bottom: 20px;
 }
 
-.image-modal-container {
-    position: relative;
-    display: inline-block; 
-}
 
-.image-modal-container img {
-    display: block; 
-    width: 100%; 
-    height: auto; 
-}
-
+.delete-button-container {
+	position: relative;
+  }
+  
 .trash-modal-icon {
     position: absolute;
     top: 5px;
@@ -388,6 +444,8 @@ li:hover {
     top: 25px; 
     left: 25px; 
 	font-size: 20px;
+	background-color: transparent;
+	border: none;
 	cursor: pointer; 
 }
 
@@ -467,59 +525,9 @@ li:hover {
 
 }
 
-
-
-
-
-
-
-#contact {
-	width: 50%;
-	margin: auto;
-}
-#contact > * {
-	text-align: center;
-
-}
-#contact h2{
-	margin-bottom: 20px;
-}
-#contact form {
-	text-align: left;
-	margin-top:30px;
-	display: flex;
-	flex-direction: column;
-}
-
-#contact input {
-	height: 50px;
-	font-size: 1.2em;
-	border: none;
-	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
-}
-#contact label {
-	margin: 2em 0 1em 0;
-}
-#contact textarea {
-	border: none;
-	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
-}
-
-input[type="submit"]{
-	font-family: 'Syne';
-	font-weight: 700;
-	color: white;
-	background-color: #1D6154;
-	margin : 2em auto ;
-	width: 180px;
-	text-align: center;
-	border-radius: 60px ;
-}
-
-footer nav ul {
-	display: flex;
-	justify-content: flex-end;
-	margin: 2em
+*:focus {
+	outline: 2px solid #1D6154;
+	outline-offset: 2px;
 }
 
 

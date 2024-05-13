@@ -11,6 +11,8 @@
 	<meta name="description" content="">
 	<link rel="stylesheet" href="./assets/style.css">
     <script src="../app.js" defer></script>
+	<script src="../login.js" defer></script>
+	<script src="../gallery.js" defer></script>
 	
 </head>
 <body>
@@ -26,6 +28,20 @@
 	</nav>
 </header>
 <main id="main">
+	<section id="login-page" style="display: none;">
+		<div class="login-page">
+            <h2>Log In</h2>
+            <form id="loginForm" action="login" method="post">
+                <label for="email">Email</label><br>
+                <input type="email" id="email" name="email" autocomplete="email" required><br>
+                <label for="password">Mot de passe</label><br>
+                <input type="password" id="password" name="password" required><br>
+                <p id="loginError"></p> 
+                <input type="submit" id="submit" value="Se connecter">
+            </form>
+            <p><a href="/password-reset">Mot de passe oublié ?</a></p>
+        </div>
+	</section>
 	<section id="introduction">
 		<figure>
 			<img src="./assets/images/sophie-bluel.png" alt="">
@@ -44,7 +60,7 @@
 
 		<dialog id="modal1" class="modal" aria-hidden="true" role="dialog" aria-label="title-modal" style="display: none;">
 			<div id = "modal-galery" style="display: block;">
-				<i class="fa-solid fa-xmark close-icon"></i>
+				<button class="fa-solid fa-xmark close-icon"></button>
 				<h3 class="title-modal"> Galerie photo </h3>
 				<div id = "gallerymodal"></div>
 				<div class="border-line"></div>
@@ -52,8 +68,8 @@
 			</div>
 
 			<div id = "modal-add-picture" style="display: none;">
-				<i class="fa-solid fa-xmark close-icon"></i>
-				<i class="fa-solid fa-arrow-left back-icon"></i>
+				<button class="fa-solid fa-xmark close-icon"></button>
+				<button class="fa-solid fa-arrow-left back-icon"></button>
 				<h3 class="title-modal"> Ajout photo </h3>
 
 				<div class = "modal-add-picture-file">
