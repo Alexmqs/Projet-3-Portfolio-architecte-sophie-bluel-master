@@ -81,24 +81,29 @@ function unloadPicture() {
 ====================================================================================
 */
 
-
-
 function openModal() {
     const modal = document.getElementById('modal1');
     focusables = Array.from(modal.querySelectorAll(focusableSelector));
     previouslyFocusableElement = document.querySelector(':focus');
-    modal.style.display = "block";
-    document.getElementById("modal-galery").style.display = "block";
+
+    modal.style.display = "block"; // Assurez-vous que la modal est visible pour la transition
+
+    requestAnimationFrame(() => { 
+        modal.classList.remove('modal-close');
+        modal.classList.add('modal-open');
+    });
+
     modal.setAttribute('aria-hidden', false);
     modal.setAttribute('aria-modal', true);
-    
+    document.getElementById("modal-galery").style.display = "block";
+
     showImgModal();
-  
+
     targetModal = modal;
     focusables[0].focus();
     console.log("Boutons de la galerie d'images ajoutés à focusables :", focusables);
 
-    // Ferme la modal lors d'un click exterieur à celle-ci
+    // Ferme la modal lors d'un click extérieur à celle-ci
     window.onclick = function(event) {
         if (event.target === modal) {
             closeModal();
@@ -107,22 +112,30 @@ function openModal() {
 }
 
 function closeModal() {
-    targetModal.style.display = "none";
-    document.getElementById("modal-add-picture").style.display = "block";
-    document.getElementById("modal-galery").style.display = "none";
-    document.getElementById("modal-add-picture").style.display = "none";
-    targetModal.setAttribute('aria-hidden', true);
-    targetModal.setAttribute('aria-modal', false);
-    const divmodalgallery = document.getElementById("gallerymodal");
-    divmodalgallery.innerHTML = "";
-    showPictures("all");
+    const modal = document.getElementById('modal1');
 
-    if (previouslyFocusableElement !== null) previouslyFocusableElement.focus()
+    modal.classList.remove('modal-open');
+    modal.classList.add('modal-close');
 
+    // Utilisez setTimeout pour attendre la fin de la transition avant de cacher la modal
+    setTimeout(() => {
+        modal.style.display = "none"; // Masquez la modal après la transition
+        document.getElementById("modal-add-picture").style.display = "none";
+        document.getElementById("modal-galery").style.display = "none";
+        modal.setAttribute('aria-hidden', true);
+        modal.setAttribute('aria-modal', false);
 
-    removeEventListeners();
-    unloadPicture();
+        const divmodalgallery = document.getElementById("gallerymodal");
+        divmodalgallery.innerHTML = "";
+        showPictures("all");
+
+        if (previouslyFocusableElement !== null) previouslyFocusableElement.focus();
+
+        removeEventListeners();
+        unloadPicture();
+    }, 300); // Correspond à la durée de la transition définie dans le CSS (0.3s)
 }
+
 
 /* 
 ====================================================================================
