@@ -1,3 +1,12 @@
+let targetModal = null;
+const focusableSelector = 'button, a , input, textarea';
+let focusables = [];
+let previouslyFocusableElement = null;
+let uploadBtnClickHandler;
+let handleSubmitNewPicture;
+let selectedFile = null;
+
+
 function checkEditMode() {
     const token = localStorage.getItem('token');
     if (token) {
@@ -7,42 +16,79 @@ function checkEditMode() {
             if (event.key === "Escape" || event.key === "Esc") {
                 closeModal();
             }
-             //Pour le focus dans la modal avec tab
+            // Pour le focus dans la modal avec tab
             if (event.key === "Tab" && targetModal !== null) {
                 focusInModal(event)
             }
         });
 
-        // Ajoute un écouteur d'événements au clic sur l'icône de corbeille une seule fois
-        document.addEventListener('click', async function(event) {
-            event.preventDefault();
-            if (event.target.classList.contains('submit-add-button')) {
-                modalAddPictureOpen();
-            }
-            if (event.target.classList.contains('back-icon')) {
-                document.getElementById("modal-add-picture").style.display = "none";
-                document.getElementById("modal-galery").style.display = "block";
-                showImgModal();
-            }
-            if (event.target.classList.contains('close-icon')) {
-                closeModal();
-            }
-        });
+        // Ajoute un écouteur d'événements pour que les cliques ce produise bien qu'une seule fois 
+        document.addEventListener('click', handleDocumentClick);
     }
 }
 
-let targetModal = null
-const focusableSelector = 'button, a , input, textarea'
-let focusables = []
-let previouslyFocusableElement = null
+function handleDocumentClick(event) {
+    event.preventDefault();
+    if (event.target.classList.contains('submit-add-button')) {
+        modalAddPictureOpen();
+        addpicture();
+        submitNewPicture();
+        checkConditions();
+    }
+    if (event.target.classList.contains('back-icon')) {
+        document.getElementById("modal-add-picture").style.display = "none";
+        document.getElementById("modal-galery").style.display = "block";
+        showImgModal();
+        //pour ne pas avoir d'evenement en double ou triple 
+        removeEventListeners();
+        document.addEventListener('click', handleDocumentClick);
+        unloadPicture();
+    }
+    if (event.target.classList.contains('close-icon')) {
+        closeModal();
+    }
+}
+
+//Permet de supprimer les ecouteur d'evenement pour ne pas qu'il se multiplie 
+function removeEventListeners() {
+    document.removeEventListener('click', handleDocumentClick);
+    document.querySelector('.upload-btn').removeEventListener('click', uploadBtnClickHandler);
+    const submitButton = document.querySelector('.form-add-picture input[type="submit"]');
+    if (submitButton) {
+        submitButton.removeEventListener('click', handleSubmitNewPicture);
+    }
+}
+
+function unloadPicture() {
+    if (selectedFile !== null) {
+        // Supprime l'image qui a été affichée dans .modal-upload-section
+        const imgElement = document.querySelector('.modal-upload-section img');
+        if (imgElement) {
+            imgElement.remove();
+        }
+
+        // Réinitialise selectedFile à null
+        selectedFile = null;
+
+        // Fait réapparaître .upload-section
+        document.querySelector('.upload-section').style.display = "flex";
+    }
+}
+
+/* 
+====================================================================================
+==============Gestion de l'ouvrerture et fermeture de la modal======================
+====================================================================================
+*/
 
 
-// Fonction pour ouvrir la modal
+
 function openModal() {
     const modal = document.getElementById('modal1');
     focusables = Array.from(modal.querySelectorAll(focusableSelector));
     previouslyFocusableElement = document.querySelector(':focus');
     modal.style.display = "block";
+    document.getElementById("modal-galery").style.display = "block";
     modal.setAttribute('aria-hidden', false);
     modal.setAttribute('aria-modal', true);
     
@@ -50,22 +96,21 @@ function openModal() {
   
     targetModal = modal;
     focusables[0].focus();
-     console.log("Boutons de la galerie d'images ajoutés à focusables :", focusables);
+    console.log("Boutons de la galerie d'images ajoutés à focusables :", focusables);
 
-
-     //Ferme la modal lors d'un click exterieur à celle-ci
-     window.onclick = function(event) {
+    // Ferme la modal lors d'un click exterieur à celle-ci
+    window.onclick = function(event) {
         if (event.target === modal) {
             closeModal();
         }
-    };
+    }
 }
 
-//Fonction qui permet de fermer la modal
 function closeModal() {
     targetModal.style.display = "none";
     document.getElementById("modal-add-picture").style.display = "block";
     document.getElementById("modal-galery").style.display = "none";
+    document.getElementById("modal-add-picture").style.display = "none";
     targetModal.setAttribute('aria-hidden', true);
     targetModal.setAttribute('aria-modal', false);
     const divmodalgallery = document.getElementById("gallerymodal");
@@ -73,19 +118,27 @@ function closeModal() {
     showPictures("all");
 
     if (previouslyFocusableElement !== null) previouslyFocusableElement.focus()
+
+
+    removeEventListeners();
+    unloadPicture();
 }
 
-//
+/* 
+====================================================================================
+==============Gestion de la modal pour supprimer des images=========================
+====================================================================================
+*/
+
 async function showImgModal() {
     try {
         const response = await fetch("http://localhost:5678/api/works");
-            if (response.ok) {
+        if (response.ok) {
             const data = await response.json();
             
             const galleryModal = document.querySelector("#gallerymodal");
             galleryModal.innerHTML = "";
             
-            // Parcours les données et affiche chaque image dans la galerie modale
             data.forEach(image => {
                 const figureElement = document.createElement("figure");
                 figureElement.classList.add("delete-button-container"); 
@@ -118,10 +171,8 @@ async function showImgModal() {
     }
 }
 
-
 async function deleteImage(imageId) {
     const token = localStorage.getItem('token');
-    // Effectuer une requête pour supprimer l'image avec l'ID donné
     try {
         const response = await fetch(`http://localhost:5678/api/works/${imageId}`, {
             method: 'DELETE',
@@ -139,25 +190,26 @@ async function deleteImage(imageId) {
     }
 } 
 
+/* 
+====================================================================================
+================Gestion de la modal pour ajouter des images=========================
+====================================================================================
+*/
 
 async function modalAddPictureOpen() {
     const categorie = await fetch("http://localhost:5678/api/categories");
     const data = await categorie.json();
 
-    //Fait apparaitre modal-add-picture et disparaitre modal-galery
     document.getElementById("modal-galery").style.display = "none";
     document.getElementById("modal-add-picture").style.display = "block";
 
-    //vide les categories
     const selectElement = document.getElementById("categorie");    
     selectElement.innerHTML = '';
 
-    //Ajoute une option vide 
     const emptyOption = document.createElement('option');
     emptyOption.value = "none";
     selectElement.appendChild(emptyOption);
 
-    //Ajoute les option de catégorie via l'api 
     data.forEach(category => {
         const option = document.createElement('option');
         option.value = category.name; 
@@ -165,119 +217,129 @@ async function modalAddPictureOpen() {
         selectElement.appendChild(option);
     });
 
-    addpicture()
+    const titleInput = document.getElementById('titre');
+    const categorySelect = document.getElementById('categorie');
+    titleInput.addEventListener('input', checkConditions);
+    categorySelect.addEventListener('change', checkConditions);
+
+    checkConditions();
 }
 
+async function addpicture() {
+    document.querySelector('.upload-btn').addEventListener('click', uploadBtnClickHandler = async function(event) {
+        event.preventDefault();
 
+        const fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.accept = 'image/jpeg, image/png';
+        fileInput.maxlength = 4 * 1024 * 1024;
 
-let selectedFile = null;
-//Fonction pour ajouter une photo
-function addpicture() {
-     // Écoute de l'événement clic sur le bouton "Ajouter photo"
-     document.querySelector('.upload-btn').addEventListener('click', function(event) {
-         event.preventDefault();
-         const fileInput = document.createElement('input');
- 
-         // Limite la taille du fichier à 4 Mo et restreint les types de fichiers à jpg et png
-         fileInput.type = 'file';
-         fileInput.accept = 'image/jpeg, image/png';
-         fileInput.maxlength = 4 * 1024 * 1024;
- 
-         fileInput.addEventListener('change', function(event) {
-             event.preventDefault();
-             selectedFile = event.target.files[0];
-             if (selectedFile) {
-                 // Vérifie si la taille du fichier est inférieure ou égale à 4 Mo
-                 if (selectedFile.size <= 4 * 1024 * 1024) {
-                     document.querySelector('.upload-section').style.display = "none";
- 
-                     // Affiche l'image à l'intérieur de la section
-                     const reader = new FileReader();
-                     reader.onload = function() {
-                         const imgElement = document.createElement('img');
-                         imgElement.src = reader.result;
-                         document.querySelector('.modal-upload-section').appendChild(imgElement);
-                     };
-                     reader.readAsDataURL(selectedFile);
-                 } else {
-                     console.error('La taille du fichier dépasse 4 Mo.');
-                 }
-             }
-         });
- 
-         // Clique automatiquement sur l'élément input de type file pour ouvrir la boîte de dialogue de sélection de fichier
-         fileInput.click();
+        fileInput.addEventListener('change', function(event) {
+            event.preventDefault();
+            selectedFile = event.target.files[0];
+            if (selectedFile) {
+                if (selectedFile.size <= 4 * 1024 * 1024) {
+                    document.querySelector('.upload-section').style.display = "none";
 
-     });
- 
-     document.querySelector('.form-add-picture').addEventListener('submit', async function(event) {
-         event.preventDefault();
- 
-         // Récupère les valeurs du formulaire
-         const title = document.getElementById('titre').value;
-         const categoryName = document.getElementById('categorie').value;
-         
-         // Vérifie si la catégorie sélectionnée est vide
-         if (categoryName.trim() === '') {
-             console.error('Veuillez sélectionner une catégorie.');
-             return;
-         }
- 
-         // Récupérer l'ID de la catégorie correspondante
-         let categoryId = null;
-         const categories = await fetch("http://localhost:5678/api/categories");
-         const categoryData = await categories.json();
-         categoryData.forEach(category => {
-             if (category.name === categoryName) {
-                 categoryId = category.id;
-             }
-         });
-     
-         // Vérifie si l'ID de la catégorie a été trouvé
-         if (categoryId === null) {
-             console.error('Catégorie non trouvée.');
-             return;
-         }
-     
-         // Création d'un objet pour stocker les données à envoyer
-         const formData = new FormData();
-         formData.append('title', title);
-         formData.append('category', categoryId);
-         formData.append('image', selectedFile );
-         const token = localStorage.getItem('token');
-
-         // Envoi des données à votre API
-         fetch('http://localhost:5678/api/works', {
-             method: 'POST',
-             body: formData,
-             headers: {
-                 'Authorization': `Bearer ${token}`
-             }
-         })
-         .then(response => {
-             if (response.ok) {
-                 console.log('Données envoyées avec succès !');
-                 showPictures("all");
+                    const reader = new FileReader();
+                    reader.onload = function() {
+                        const imgElement = document.createElement('img');
+                        imgElement.src = reader.result;
+                        document.querySelector('.modal-upload-section').appendChild(imgElement);
+                        checkConditions();
+                    };
+                    reader.readAsDataURL(selectedFile);
                 } else {
-                 console.error('Erreur lors de l\'envoi des données à l\'API.');
-             }
-         })
-         .catch(error => {
-             console.error('Erreur lors de l\'envoi des données :', error);
-         });
-     });
- 
+                    console.error('La taille du fichier dépasse 4 Mo.');
+                }
+            }
+        });
+
+        fileInput.click();
+    });
 }
 
-//Permet de garder le focus dans la modal 
-focusInModal = function (event) {
+function submitNewPicture() {
+    const submitButton = document.querySelector('.form-add-picture input[type="submit"]');
+    submitButton.addEventListener('click', handleSubmitNewPicture = async function(event) {
+        event.preventDefault();
+
+        const token = localStorage.getItem('token');
+        let categoryId = null;
+        const categories = await fetch("http://localhost:5678/api/categories");
+        const categoryData = await categories.json();
+        const title = document.getElementById('titre').value;
+        const categoryName = document.getElementById('categorie').value;
+
+        if (categoryName.trim() === '') {
+            console.error('Veuillez sélectionner une catégorie.');
+            return;
+        }
+
+        categoryData.forEach(category => {
+            if (category.name === categoryName) {
+                categoryId = category.id;
+            }
+        });
+
+        if (categoryId === null) {
+            console.error('Catégorie non trouvée.');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('title', title);
+        formData.append('category', categoryId);
+        formData.append('image', selectedFile);
+
+        await fetch('http://localhost:5678/api/works', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                showPictures("all");
+            }
+        })
+        .catch(error => {
+            console.error('Erreur lors de l\'upload de l\'image:', error.message); 
+        })
+    });
+}
+
+
+
+function checkConditions() {
+    const titleInput = document.getElementById('titre');
+    const categorySelect = document.getElementById('categorie');
+    const validateBtn = document.querySelector('.validate-btn input[type="submit"]');
+
+    const title = titleInput.value.trim();
+    const categoryId = categorySelect.value;
+
+    if (selectedFile !== null && title !== '' && categoryId !== 'none') {
+        validateBtn.classList.add('validate-btn-active');
+    } else {
+        validateBtn.classList.remove('validate-btn-active');
+    }
+}
+/* 
+====================================================================================
+=================================Gestion du focus===================================
+====================================================================================
+*/
+
+const focusInModal = function (event) {
     event.preventDefault();
     let index = focusables.findIndex(f => f === targetModal.querySelector(':focus'));
     if (event.shiftKey === true) {
         index--;
     } else {
         index++; 
-    }   
+    }
     if (index >= focusables.length) {
         index = 0;
     }
@@ -286,4 +348,3 @@ focusInModal = function (event) {
     }
     focusables[index].focus();
 }
-

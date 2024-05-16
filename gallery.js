@@ -1,3 +1,17 @@
+// Vide le localStorage et appel showCat()
+document.addEventListener('DOMContentLoaded', () => {
+    localStorage.clear();
+    showCat()
+});
+
+
+/* 
+====================================================================================
+====================Gestion de l'affichage des catégories===========================
+====================================================================================
+*/
+
+
 //Permet d'afficher les categorie avec les filtres et de l'evenement pour cliquer dessus
 async function showCat() {
     const categorie = await fetch("http://localhost:5678/api/categories");
@@ -50,6 +64,14 @@ async function showCat() {
         divfilterButtons.appendChild(btnelement);
     }
 }
+
+
+/* 
+====================================================================================
+================Gestion de l'affichage des images dans la gallerie==================
+====================================================================================
+*/
+
 
 //Fonction qui permet de recuperer et afficher les images et la déscription sur le site 
 async function showPictures(id) {
@@ -111,8 +133,3 @@ async function showPictures(id) {
 }
 
 
-// Vide le localStorage et appel showCat()
-document.addEventListener('DOMContentLoaded', () => {
-    localStorage.clear();
-    showCat()
-});

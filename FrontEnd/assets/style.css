@@ -300,6 +300,17 @@ footer nav ul {
 	background-color: transparent;
 }
 
+#edition-mode-projets span {
+	margin-left: 10px;
+	font-family: Work Sans;
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 16.42px;
+}
+
+#edition-mode-projets i {
+	font-size: 20px;
+}
 
 /* Ajout du style pour les filtre */
 #filterButtons {
@@ -332,6 +343,7 @@ footer nav ul {
 
 
 /* Gestion de la modal */
+
 .modal {
 	position: fixed;
 	top: 0;
@@ -516,18 +528,32 @@ footer nav ul {
 
 }
 
-.validate-btn {
-	position: absolute;
-    bottom: 25px; 
-	left: 50%;
-	transform: translateX(-50%);
-	cursor: pointer; 
-
+.validate-btn input[type="submit"] {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px;
+    width: 237px;
+    background-color: #A7A7A7;
+    border: none;
+    border-radius: 50px;
+    transition: background-color 0.3s; 
 }
+
+.validate-btn input[type="submit"].validate-btn-active {
+    background-color: #1D6154 !important;
+}
+.modal-upload-section img {
+	height: 100%;
+}
+
+
 
 *:focus {
-	outline: 2px solid #1D6154;
-	outline-offset: 2px;
+	outline: 1px solid #1D6154;
 }
 
-
+.hide-filter-buttons {
+    display: none;
+}

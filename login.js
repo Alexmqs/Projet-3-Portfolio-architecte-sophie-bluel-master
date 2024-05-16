@@ -1,3 +1,21 @@
+// Écouter le clic sur l'élément avec l'ID login
+document.getElementById("login").addEventListener("click", function(event) {
+    event.preventDefault();
+    if (document.getElementById("login").textContent === "login") {
+        showLoginPage();
+    }
+    if (document.getElementById("login").textContent === "logout") {
+        removeEditionMode();
+    }
+});
+
+/* 
+====================================================================================
+=======================Gestion de la page de connexion==============================
+====================================================================================
+*/
+
+
 // Fonction pour afficher la page de connexion et masquer les autres sections
 function showLoginPage() {
     // Masquer toutes les sections
@@ -46,7 +64,6 @@ function showLoginPage() {
             // Si le token est récupéré avec succès, le stocker dans le local storage
             const token = data.token;
             localStorage.setItem("token", token);
-            console.log("Token récupéré et stocké :", token);
             editionMode();
         })
         .catch(error => {
@@ -54,6 +71,13 @@ function showLoginPage() {
         });
     });
 }
+
+
+/* 
+====================================================================================
+=================Gestion de l'affichage si connecter ou deconnecter ================
+====================================================================================
+*/
 
 
 // Fonction pour afficher toutes les autres sections et masquer la section de connexion
@@ -64,13 +88,10 @@ function editionMode() {
     document.getElementById("portfolio").style.display = "block";
     document.getElementById("contact").style.display = "block";
 
-    // Masquer les filtres
-    const filterButtonsContainer = document.getElementById("filterButtons").parentNode;
-    filterButtonsContainer.classList.add("hide-filter-buttons");
-
     // Appeler showPictures("all") pour charger toutes les images
     showPictures("all");
 
+    document.getElementById("filterButtons").style.display = "none";
 
     // Changer le texte de l'élément avec l'ID "login" en "Logout"
     const loginLink = document.getElementById("login");
@@ -99,9 +120,17 @@ function editionMode() {
     // Vérifier s'il n'y a pas déjà un bouton "Modifier" présent
     if (!editionModeProjetsDiv.querySelector(".modif-btn")) {
         const modifBtn = document.createElement("button");
-        modifBtn.classList.add("fa-solid", "fa-pen-to-square", "modif-btn");
-        modifBtn.textContent = "Modifier"; 
-
+        modifBtn.classList.add("modif-btn");
+    
+        const icon = document.createElement("i");
+        icon.classList.add("fa-solid", "fa-pen-to-square");
+    
+        const text = document.createElement("span");
+        text.textContent = "modifier";
+    
+        modifBtn.appendChild(icon);
+        modifBtn.appendChild(text);
+    
         editionModeProjetsDiv.appendChild(modifBtn);
     }
 
@@ -116,16 +145,9 @@ function editionMode() {
 function removeEditionMode() {
     // Supprimer le token du localStorage
     localStorage.removeItem("token");
-    // Afficher le token supprimé dans la console pour vérification
-    const removedToken = localStorage.getItem("token");
-    console.log("Token supprimé :", removedToken);
+
+    document.getElementById("filterButtons").style.display = "block";
     
-
-    // Sélectionne le conteneur des boutons de filtre
-    const filterButtonsContainer = document.getElementById("filterButtons").parentNode;
-    // Retire la classe pour montrer les boutons de filtre
-    filterButtonsContainer.classList.remove("hide-filter-buttons");
-
     // Changer le texte de l'élément avec l'ID "login" en "Login"
     const loginLink = document.getElementById("login");
     loginLink.textContent = "login";
@@ -139,14 +161,4 @@ function removeEditionMode() {
 }
 
 
-// Écouter le clic sur l'élément avec l'ID login
-document.getElementById("login").addEventListener("click", function(event) {
-    event.preventDefault();
-    if (document.getElementById("login").textContent === "login") {
-        showLoginPage();
-    }
-    if (document.getElementById("login").textContent === "logout") {
-        removeEditionMode();
-    }
-});
 
