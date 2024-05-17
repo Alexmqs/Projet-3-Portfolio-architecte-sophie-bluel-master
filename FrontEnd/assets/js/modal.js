@@ -7,6 +7,7 @@ let handleSubmitNewPicture;
 let selectedFile = null;
 
 
+//Permet de verifier si lors de la connexion le token a bien été initialiser 
 function checkEditMode() {
     const token = localStorage.getItem("token");
     if (token) {
@@ -27,6 +28,7 @@ function checkEditMode() {
     }
 }
 
+//Permet de gerer les addEventListener pour pouvoir les removes et ne pas créer de copie 
 function handleDocumentClick(event) {
     event.preventDefault();
     if (event.target.classList.contains("submit-add-button")) {
@@ -59,6 +61,7 @@ function removeEventListeners() {
     }
 }
 
+// Permet de décharger la photo si l'on ne l'upload pas 
 function unloadPicture() {
     if (selectedFile !== null) {
         // Supprime l'image qui a été affichée dans .modal-upload-section
@@ -80,7 +83,7 @@ function unloadPicture() {
 ==============Gestion de l'ouvrerture et fermeture de la modal======================
 ====================================================================================
 */
-
+// Permet d'ouvrir la modal 
 function openModal() {
     const modal = document.getElementById("modal1");
     focusables = Array.from(modal.querySelectorAll(focusableSelector));
@@ -109,7 +112,7 @@ function openModal() {
         }
     }
 }
-
+// Permet de fermer la modal 
 function closeModal() {
     const modal = document.getElementById("modal1");
 
@@ -141,7 +144,7 @@ function closeModal() {
 ==============Gestion de la modal pour supprimer des images=========================
 ====================================================================================
 */
-
+// Permet de faire apparaitre les images dans la modal 
 async function showImgModal() {
     try {
         const response = await fetch("http://localhost:5678/api/works");
@@ -182,7 +185,7 @@ async function showImgModal() {
         console.error("Erreur lors de la récupération des images :", error);
     }
 }
-
+//Permet la suppression d'image
 async function deleteImage(imageId) {
     const token = localStorage.getItem("token");
     try {
@@ -207,7 +210,7 @@ async function deleteImage(imageId) {
 ================Gestion de la modal pour ajouter des images=========================
 ====================================================================================
 */
-
+//Permet d'ouvrire la partie de la modal pour l'ajout d'image
 async function modalAddPictureOpen() {
     const categorie = await fetch("http://localhost:5678/api/categories");
     const data = await categorie.json();
@@ -236,7 +239,7 @@ async function modalAddPictureOpen() {
 
     checkConditions();
 }
-
+//Permet d'ajouter l'image que l'on veut envoyer a l'api 
 async function addpicture() {
     document.querySelector(".upload-btn").addEventListener("click", uploadBtnClickHandler = async function(event) {
         event.preventDefault();
@@ -270,7 +273,7 @@ async function addpicture() {
         fileInput.click();
     });
 }
-
+//Permet d'envoie l'image a l'api avec sont titre et sa catégorie
 function submitNewPicture() {
     const submitButton = document.querySelector(".form-add-picture input[type='submit']");
     submitButton.addEventListener("click", handleSubmitNewPicture = async function(event) {
@@ -324,7 +327,7 @@ function submitNewPicture() {
 }
 
 
-
+//Permet verifie si tout est ok pour l'envoie a l'api et change la couleur du btn 
 function checkConditions() {
     const titleInput = document.getElementById("titre");
     const categorySelect = document.getElementById("categorie");
@@ -344,7 +347,7 @@ function checkConditions() {
 =================================Gestion du focus===================================
 ====================================================================================
 */
-
+//Permet de gerer le focus dans la modal 
 const focusInModal = function (event) {
     event.preventDefault();
     let index = focusables.findIndex(f => f === targetModal.querySelector(":focus"));
