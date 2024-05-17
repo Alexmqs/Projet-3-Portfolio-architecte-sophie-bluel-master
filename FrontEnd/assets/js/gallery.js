@@ -1,5 +1,5 @@
 // Vide le localStorage et appel showCat()
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
     localStorage.clear();
     showCat()
 });

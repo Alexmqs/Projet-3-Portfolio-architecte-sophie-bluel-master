@@ -56,7 +56,7 @@ function showLoginPage() {
                 return response.json();
             } else if (response.status === 401) {
                 // Si non autorisé (401), afficher un message d'erreur
-                document.getElementById('loginError').textContent = "Erreur dans l’identifiant ou le mot de passe"; 
+                document.getElementById("loginError").textContent = "Erreur dans l’identifiant ou le mot de passe"; 
                 throw new Error("Non autorisé");
             } 
         })
@@ -134,7 +134,7 @@ function editionMode() {
         editionModeProjetsDiv.appendChild(modifBtn);
     }
 
-    document.querySelector('.modif-btn').addEventListener('click', function(event) {
+    document.querySelector(".modif-btn").addEventListener("click", function(event) {
         event.preventDefault();
         checkEditMode();
     });
@@ -153,10 +153,10 @@ function removeEditionMode() {
     loginLink.textContent = "login";
 
     //Supprime la barre d'etition 
-    const editionModeBar = document.querySelector('.edition-mode-bar');
+    const editionModeBar = document.querySelector(".edition-mode-bar");
     editionModeBar.remove();
     //Supprime le bouton modifier 
-    const buttonEditionProjets = document.querySelector('.modif-btn');
+    const buttonEditionProjets = document.querySelector(".modif-btn");
     buttonEditionProjets.remove()
 }
 
