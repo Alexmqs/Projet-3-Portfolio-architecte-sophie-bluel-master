@@ -19,7 +19,7 @@ function checkEditMode() {
             }
             // Pour le focus dans la modal avec tab
             if (event.key === "Tab" && targetModal !== null) {
-                focusInModal(event)
+                focusInModal(event);
             }
         });
 
@@ -83,13 +83,14 @@ function unloadPicture() {
 ==============Gestion de l'ouvrerture et fermeture de la modal======================
 ====================================================================================
 */
+
 // Permet d'ouvrir la modal 
 function openModal() {
     const modal = document.getElementById("modal1");
     focusables = Array.from(modal.querySelectorAll(focusableSelector));
     previouslyFocusableElement = document.querySelector(":focus");
 
-    modal.style.display = "block"; // Assurez-vous que la modal est visible pour la transition
+    modal.style.display = "block"; 
 
     requestAnimationFrame(() => { 
         modal.classList.remove("modal-close");
@@ -112,6 +113,7 @@ function openModal() {
         }
     }
 }
+
 // Permet de fermer la modal 
 function closeModal() {
     const modal = document.getElementById("modal1");
@@ -119,7 +121,7 @@ function closeModal() {
     modal.classList.remove("modal-open");
     modal.classList.add("modal-close");
 
-    // Utilisez setTimeout pour attendre la fin de la transition avant de cacher la modal
+    //setTimeout pour attendre la fin de la transition avant de cacher la modal
     setTimeout(() => {
         modal.style.display = "none"; // Masquez la modal après la transition
         document.getElementById("modal-add-picture").style.display = "none";
@@ -135,7 +137,7 @@ function closeModal() {
 
         removeEventListeners();
         unloadPicture();
-    }, 300); // Correspond à la durée de la transition définie dans le CSS (0.3s)
+    }, 300); // Correspond à la durée de la transition définie dans le CSS
 }
 
 
@@ -239,7 +241,8 @@ async function modalAddPictureOpen() {
 
     checkConditions();
 }
-//Permet d'ajouter l'image que l'on veut envoyer a l'api 
+ 
+// Permet d'ajouter l'image que l'on veut envoyer à l'API
 async function addpicture() {
     document.querySelector(".upload-btn").addEventListener("click", uploadBtnClickHandler = async function(event) {
         event.preventDefault();
@@ -247,32 +250,42 @@ async function addpicture() {
         const fileInput = document.createElement("input");
         fileInput.type = "file";
         fileInput.accept = "image/jpeg, image/png";
-        fileInput.maxlength = 4 * 1024 * 1024;
 
         fileInput.addEventListener("change", function(event) {
             event.preventDefault();
-            selectedFile = event.target.files[0];
-            if (selectedFile) {
-                if (selectedFile.size <= 4 * 1024 * 1024) {
-                    document.querySelector(".upload-section").style.display = "none";
+            selectedFile = event.target.files[0]; // Notez que nous utilisons ici la variable globale `selectedFile`
 
-                    const reader = new FileReader();
-                    reader.onload = function() {
-                        const imgElement = document.createElement("img");
-                        imgElement.src = reader.result;
-                        document.querySelector(".modal-upload-section").appendChild(imgElement);
-                        checkConditions();
-                    };
-                    reader.readAsDataURL(selectedFile);
-                } else {
-                    console.error("La taille du fichier dépasse 4 Mo.");
+            if (selectedFile) {
+                // Vérifie le type de fichier
+                const allowedTypes = ['image/jpeg', 'image/png'];
+                if (!allowedTypes.includes(selectedFile.type)) {
+                    console.error("Le type de fichier n'est pas autorisé. Veuillez sélectionner un fichier JPEG ou PNG.");
+                    return;
                 }
+
+                // Vérifie la taille du fichier
+                if (selectedFile.size > 4 * 1024 * 1024) {
+                    console.error("La taille du fichier dépasse 4 Mo.");
+                    return;
+                }
+
+                document.querySelector(".upload-section").style.display = "none";
+
+                const reader = new FileReader();
+                reader.onload = function() {
+                    const imgElement = document.createElement("img");
+                    imgElement.src = reader.result;
+                    document.querySelector(".modal-upload-section").appendChild(imgElement);
+                    checkConditions();
+                };
+                reader.readAsDataURL(selectedFile);
             }
         });
 
         fileInput.click();
     });
 }
+
 //Permet d'envoie l'image a l'api avec sont titre et sa catégorie
 function submitNewPicture() {
     const submitButton = document.querySelector(".form-add-picture input[type='submit']");
@@ -316,6 +329,7 @@ function submitNewPicture() {
         })
         .then(response => {
             if (response.ok) {
+                document.getElementById("titre").value = "";
                 closeModal();
                 showPictures("all");
             }
