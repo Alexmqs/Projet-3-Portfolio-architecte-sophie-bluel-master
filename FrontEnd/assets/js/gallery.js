@@ -17,9 +17,6 @@ async function showCat() {
     const categorie = await fetch("http://localhost:5678/api/categories");
     const data = await categorie.json();
 
-    //sauvegarde le html de base pour pouvoir le reload lors d'une connexion reussit 
-    mainContent = document.querySelector("main").innerHTML;
-
     //Creation du boutons Tous et le rend active 
     const divfilterallButtons = document.querySelector("#filterButtons");
     const btnallelement = document.createElement("button");
@@ -75,7 +72,6 @@ async function showCat() {
 
 //Fonction qui permet de recuperer et afficher les images et la déscription sur le site 
 async function showPictures(id) {
-
     //Recuperation des données de l'api concernant les images
     const picture = await fetch("http://localhost:5678/api/works");
     const data = await picture.json();
