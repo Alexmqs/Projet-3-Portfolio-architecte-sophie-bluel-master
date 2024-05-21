@@ -64,6 +64,8 @@ function showLoginPage() {
             // Si le token est récupéré avec succès, le stocker dans le local storage
             const token = data.token;
             localStorage.setItem("token", token);
+            document.getElementById("email").value = '';
+            document.getElementById("password").value = ''
             editionMode();
         })
         .catch(error => {
