@@ -32,7 +32,7 @@ function showLoginPage() {
     document.getElementById("loginForm").addEventListener("submit", function(event) {
         event.preventDefault(); // Empêche le rechargement de la page
 
-        // Récupérer les valeurs du formulaire
+        // Récupere les valeurs du formulaire
         const email = document.getElementById("email").value;
         const password = document.getElementById("password").value;
 
@@ -42,7 +42,6 @@ function showLoginPage() {
             password: password
         };
 
-        // Envoyer la requête POST à l'endpoint /users/login
         fetch("http://localhost:5678/api/users/login", {
             method: "POST",
             body: JSON.stringify(data),
@@ -61,7 +60,6 @@ function showLoginPage() {
             } 
         })
         .then(data => {
-            // Si le token est récupéré avec succès, le stocker dans le local storage
             const token = data.token;
             localStorage.setItem("token", token);
             document.getElementById("email").value = '';
@@ -119,7 +117,7 @@ function editionMode() {
 
     const editionModeProjetsDiv = document.getElementById("edition-mode-projets");
 
-    // Vérifier s'il n'y a pas déjà un bouton "Modifier" présent
+    // Vérifie s'il n'y a pas déjà un bouton "Modifier" présent
     if (!editionModeProjetsDiv.querySelector(".modif-btn")) {
         const modifBtn = document.createElement("button");
         modifBtn.classList.add("modif-btn");

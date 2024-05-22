@@ -146,6 +146,7 @@ function closeModal() {
 ==============Gestion de la modal pour supprimer des images=========================
 ====================================================================================
 */
+
 // Permet de faire apparaitre les images dans la modal 
 async function showImgModal() {
     try {
@@ -187,6 +188,7 @@ async function showImgModal() {
         console.error("Erreur lors de la récupération des images :", error);
     }
 }
+
 //Permet la suppression d'image
 async function deleteImage(imageId) {
     const token = localStorage.getItem("token");
@@ -212,6 +214,7 @@ async function deleteImage(imageId) {
 ================Gestion de la modal pour ajouter des images=========================
 ====================================================================================
 */
+
 //Permet d'ouvrire la partie de la modal pour l'ajout d'image
 async function modalAddPictureOpen() {
     const categorie = await fetch("http://localhost:5678/api/categories");
@@ -340,7 +343,6 @@ function submitNewPicture() {
     });
 }
 
-
 //Permet verifie si tout est ok pour l'envoie a l'api et change la couleur du btn 
 function checkConditions() {
     const titleInput = document.getElementById("titre");
@@ -356,11 +358,13 @@ function checkConditions() {
         validateBtn.classList.remove("validate-btn-active");
     }
 }
+
 /* 
 ====================================================================================
 =================================Gestion du focus===================================
 ====================================================================================
 */
+
 //Permet de gerer le focus dans la modal 
 const focusInModal = function (event) {
     event.preventDefault();
